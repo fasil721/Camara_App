@@ -32,11 +32,10 @@ class _MyAppState extends State<MyApp> {
       ),
       body: Builder(
         builder: (context) {
-          if (pic != null) {
-            Uint8List imageBytes = base64Decode(pic);
+          if (imageBytes != null) {
             return Center(
               child: Container(
-                child: Image.memory(imageBytes),
+                child: Image.memory(imageBytes!),
               ),
             );
           }
@@ -52,12 +51,11 @@ class _MyAppState extends State<MyApp> {
 
   File? image;
   dynamic path;
-  dynamic pic;
+  Uint8List? imageBytes;
   pickImage(ImageSource source) async {
     final image = await ImagePicker().pickImage(source: source);
     if (image != null) {
-      Uint8List imageBytes = await image.readAsBytes();
-      pic = base64Encode(imageBytes);
+      imageBytes = await image.readAsBytes();
     }
     setState(
       () {
