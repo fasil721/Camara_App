@@ -19,24 +19,30 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   File? _image;
-  @override
-  void initState() {
-    requestPermission();
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   requestPermission();
+  //   super.initState();
+  // }
 
-  requestPermission() async {
-    var status = await Permission.camera.status;
-    if (status.isGranted) {
-      Permission.camera.request();
-    }
-  }
+  // requestPermission() async {
+  //   var status = await Permission.camera.status;
+  //   if (status.isGranted) {
+  //     Permission.camera.request();
+  //   }
+  //   var status1 = await Permission.storage.status;
+  //   if (status1.isGranted) {
+  //     Permission.storage.request();
+  //   }
+  // }
 
   pickImage(ImageSource source) async {
     final image = await ImagePicker().pickImage(source: source);
     setState(
       () {
-        _image = File(image!.path);
+        if (image != null) {
+          _image = File(image.path);
+        }
       },
     );
   }
