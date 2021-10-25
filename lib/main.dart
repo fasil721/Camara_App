@@ -43,7 +43,7 @@ class _MyAppState extends State<MyApp> {
       () {
         if (image != null) {
           _image = File(image.path);
-          GallerySaver.saveImage(_image!.path);
+          GallerySaver.saveImage(_image!.path, albumName: "My images");
         }
       },
     );
@@ -63,9 +63,8 @@ class _MyAppState extends State<MyApp> {
         builder: (context) {
           return Center(
             child: Container(
-              child: _image == null
-                  ? Text("No Image Selected")
-                  : Image.file(_image!),
+              child:
+                  _image == null ? Text("Take New Image") : Image.file(_image!),
             ),
           );
         },
