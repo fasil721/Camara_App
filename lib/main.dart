@@ -1,10 +1,8 @@
-import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
-// import 'package:permission_handler/permission_handler.dart';
 void main() {
   runApp(
     MaterialApp(
@@ -20,6 +18,29 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  File? _image;
+  @override
+  void initState() {
+    requestPermission();
+    super.initState();
+  }
+
+  requestPermission() async {
+    var status = await Permission.camera.status;
+    if (status.isGranted) {
+      Permission.camera.request();
+    }
+  }
+
+  pickImage(ImageSource source) async {
+    final image = await ImagePicker().pickImage(source: source);
+    setState(
+      () {
+        _image = File(image!.path);
+      },
+    );
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -32,37 +53,15 @@ class _MyAppState extends State<MyApp> {
       ),
       body: Builder(
         builder: (context) {
-          if (imageBytes != null) {
-            return Center(
-              child: Container(
-                child: Image.memory(imageBytes!),
-              ),
-            );
-          }
           return Center(
             child: Container(
-              child: Text("No Image is here"),
+              child: _image == null
+                  ? Text("No Image Selected")
+                  : Image.file(_image!),
             ),
           );
         },
       ),
-    );
-  }
-
-  File? image;
-  dynamic path;
-  Uint8List? imageBytes;
-  pickImage(ImageSource source) async {
-    final image = await ImagePicker().pickImage(source: source);
-    if (image != null) {
-      imageBytes = await image.readAsBytes();
-    }
-    setState(
-      () {
-        if (image != null) {
-          path = image.path;
-        }
-      },
     );
   }
 }
